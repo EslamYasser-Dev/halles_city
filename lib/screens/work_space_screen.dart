@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
+import '../constants.dart';
+
+
 class WorkSpaceScreen extends StatefulWidget {
   @override
   _WorkSpaceScreenState createState() => _WorkSpaceScreenState();
@@ -33,10 +36,15 @@ class _WorkSpaceScreenState extends State<WorkSpaceScreen>
         body: CustomScrollView(
           slivers: <Widget>[
             SliverAppBar(
-              expandedHeight: 350,
-              leading: Icon(Icons.arrow_back_ios),
+              expandedHeight: 322,
+              leading: IconButton(
+                icon: back_icon,
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
               flexibleSpace: FlexibleSpaceBar(
-                collapseMode: CollapseMode.pin,
+                collapseMode: CollapseMode.parallax,
                 background: Column(
                   children: <Widget>[
                     Image.network(
@@ -60,9 +68,10 @@ class _WorkSpaceScreenState extends State<WorkSpaceScreen>
               ),
               pinned: true,
               floating: true,
-              backgroundColor: Color(0xFF1A233F),
+              backgroundColor: main_light_color,
               bottom: TabBar(
                 unselectedLabelColor: Colors.blueGrey[500],
+
                 tabs: <Widget>[
                   Tab(
                     text: 'Details',
@@ -124,7 +133,7 @@ class _WorkSpaceScreenState extends State<WorkSpaceScreen>
                                   padding: const EdgeInsets.all(12.0),
                                   child: Icon(
                                     Icons.location_on,
-                                    color: Colors.black,
+                                    color: main_dark_color,
                                     size: 42.0,
                                     semanticLabel:
                                         'Text to announce in accessibility modes',
