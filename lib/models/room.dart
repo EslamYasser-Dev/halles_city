@@ -1,6 +1,10 @@
 import 'dart:core';
 
+import 'package:flutter/cupertino.dart';
+
 class Room {
+  List<ImageProvider> imagesPath;
+
   String name;
   num pricePerhoure;
   int numberOfChairs;
@@ -10,13 +14,16 @@ class Room {
   bool hasSoundSystem;
   bool hasAirCondition;
 
-  Room(
-      {this.name,
-      this.pricePerhoure,
-      this.numberOfChairs,
-      this.numOfTables,
-      this.hasBoard,
-      this.hasDataShow,
-      this.hasSoundSystem,
-      this.hasAirCondition});
+  Room({this.name,
+    this.pricePerhoure,
+    this.numberOfChairs,
+    this.numOfTables,
+    this.hasBoard,
+    this.hasDataShow,
+    this.hasSoundSystem,
+    this.hasAirCondition,
+    this.imagesPath});
+
+
+
 }

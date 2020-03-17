@@ -1,20 +1,27 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:halles_city/UI_componants/hall_properties.dart';
 import 'package:halles_city/models/room.dart';
-import 'package:halles_city/screens/work_space_screen.dart';
 
 import '../constants.dart' as constant;
 
 class RoomScreen extends StatefulWidget {
+  // intializing a new room a defualt one
   Room roomData = Room(
-    hasAirCondition: true,
-    hasBoard: true,
-    hasDataShow: true,
-    hasSoundSystem: true,
-    name: 'Room name',
-    numberOfChairs: 5,
-    numOfTables: 0,
-    pricePerhoure: 50,
+      hasAirCondition: true,
+      hasBoard: true,
+      hasDataShow: true,
+      hasSoundSystem: true,
+      name: 'Room name',
+      numberOfChairs: 5,
+      numOfTables: 0,
+      pricePerhoure: 50,
+      imagesPath: [
+        constant.network_image1,
+        constant.network_image2,
+        constant.network_image3
+      ]
   );
 
   RoomScreen();
@@ -65,8 +72,25 @@ class _RoomScreenState extends State<RoomScreen> {
                 padding: constant.three_sides_padding,
                 //making the image border curvy not hard
                 child: ClipRRect(
-                    borderRadius: constant.circularBorder,
-                    child: constant.test_image),
+                  borderRadius: constant.circularBorder,
+                  child: Container(
+                    child: CarouselSlider.builder(
+                      viewportFraction: 1.0,
+                      autoPlay: true,
+                      itemCount: widget.roomData.imagesPath.length,
+                      itemBuilder: (BuildContext context, int itemIndex) {
+                        return Image(
+                          image: widget.roomData.imagesPath[itemIndex],
+                          width: MediaQuery
+                              .of(context)
+                              .size
+                              .width,
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    ),
+                  ),
+                ),
               ),
               // adding pading to the hall details box
               Padding(
@@ -93,9 +117,13 @@ class _RoomScreenState extends State<RoomScreen> {
                                     fontWeight: FontWeight.bold,
                                     color: constant.main_dark_color),
                               ),
-                              Text(
-                                '${widget.roomData.pricePerhoure}\$/hr',
-                                style: TextStyle(color: Colors.black54),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 2, bottom: 1),
+                                child: Text(
+                                  '${widget.roomData.pricePerhoure}\$/hr',
+                                  style: TextStyle(color: Colors.black54),
+                                ),
                               )
                             ],
                           ),
@@ -111,32 +139,32 @@ class _RoomScreenState extends State<RoomScreen> {
 
                         // creating all room properties by func creatHallproperty with its two properties
                         // and a custom divider befor each property
-                        creatHallproperty(
+                        HallProperties.creatHallproperty(
                           property: 'Number Of chairs',
                           value: widget.roomData.numberOfChairs.toString(),
                         ),
                         constant.custom_divider,
-                        creatHallproperty(
+                        HallProperties.creatHallproperty(
                           property: 'Tables',
                           value: widget.roomData.numOfTables == 0
                               ? 'Not Available'
                               : widget.roomData.numOfTables.toString(),
                         ),
                         constant.custom_divider,
-                        creatHallproperty(
+                        HallProperties.creatHallproperty(
                             property: 'Board',
                             value: widget.roomData.hasBoard
                                 ? 'Avilable'
                                 : 'Not Available'),
                         constant.custom_divider,
-                        creatHallproperty(
+                        HallProperties.creatHallproperty(
                           property: 'Screen/Data Show ',
                           value: widget.roomData.hasDataShow
                               ? 'Available'
                               : 'Not Available',
                         ),
                         constant.custom_divider,
-                        creatHallproperty(
+                        HallProperties.creatHallproperty(
                           property: 'Sound System',
                           value: widget.roomData.hasSoundSystem
                               ? 'Avialble'
@@ -144,7 +172,7 @@ class _RoomScreenState extends State<RoomScreen> {
                         ),
 
                         constant.custom_divider,
-                        creatHallproperty(
+                        HallProperties.creatHallproperty(
                           property: 'Air condition',
                           value: widget.roomData.hasAirCondition
                               ? 'Available'
@@ -166,35 +194,25 @@ class _RoomScreenState extends State<RoomScreen> {
                     // putting the button into an expanded widget to fill the
                     // residual space inside the row
                     Expanded(
-                      //cliping the button edges with a common radius in the app which is circularBorder
-                      child: ClipRRect(
-                        borderRadius: constant.circularBorder,
-                        child: MaterialButton(
-                          //setting a height of the button to fill the row height
-                          height: 50,
-                          color: Color(0xCA009EE2),
-                          // button color which is lighter than app bar
-                          child: Text('Rent Now'),
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => WorkSpaceScreen()));
-                          },
-                        ),
-                      ),
+                      //Calling a static custombutton func with class name(HallProperties)
+                        child: HallProperties.cusomButton(
+                            context: this.context,
+                            //setting the current context whitch we are working in
+                            text: 'Rent Now' //the text of the putton
+                        )
                     ),
                     // a toggle favourite button
                     IconButton(
                       icon: Icon(
                         Icons.favorite,
+                        size: 30,
                       ),
                       color: likeColor,
                       onPressed: () {
                         setState(() {
                           isEnabled
                               ? {likeColor = Colors.grey, isEnabled = false}
-                              : {likeColor = Colors.red, isEnabled = true};
+                              : {likeColor = Colors.red[700], isEnabled = true};
                         });
                       },
                     ),
@@ -208,13 +226,5 @@ class _RoomScreenState extends State<RoomScreen> {
     );
   }
 
-  // this func creates a new room property with the name and its value
-  Widget creatHallproperty({String property, String value}) {
-    return Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[Text(property), Text(value)],
-        ));
-  }
+
 }
